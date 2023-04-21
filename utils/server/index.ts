@@ -1,7 +1,13 @@
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
 
-import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION } from '../app/const';
+import {
+  AZURE_DEPLOYMENT_ID,
+  OPENAI_API_HOST,
+  OPENAI_API_TYPE,
+  OPENAI_API_VERSION,
+  OPENAI_ORGANIZATION,
+} from '../app/const';
 
 import {
   ParsedEvent,
@@ -26,7 +32,7 @@ export class OpenAIError extends Error {
 export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
-  temperature : number,
+  temperature: number,
   key: string,
   messages: Message[],
 ) => {
@@ -38,18 +44,23 @@ export const OpenAIStream = async (
     headers: {
       'Content-Type': 'application/json',
       ...(OPENAI_API_TYPE === 'openai' && {
-        Authorization: `Bearer ${key ? key : process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${key ? key : process.env.OPENAI_API_KEY}`,
       }),
+      /* The commented out code is calling the `OpenAIStream` function from the `utils/server` module with
+the provided parameters. This function is likely responsible for sending a request to the OpenAI API
+to generate a response to the given prompt and messages using the provided model and API key, with
+the specified temperature for randomness. The response from the API is then returned as a stream. */
       ...(OPENAI_API_TYPE === 'azure' && {
-        'api-key': `${key ? key : process.env.OPENAI_API_KEY}`
+        'api-key': `${key ? key : process.env.OPENAI_API_KEY}`,
       }),
-      ...((OPENAI_API_TYPE === 'openai' && OPENAI_ORGANIZATION) && {
-        'OpenAI-Organization': OPENAI_ORGANIZATION,
-      }),
+      ...(OPENAI_API_TYPE === 'openai' &&
+        OPENAI_ORGANIZATION && {
+          'OpenAI-Organization': OPENAI_ORGANIZATION,
+        }),
     },
     method: 'POST',
     body: JSON.stringify({
-      ...(OPENAI_API_TYPE === 'openai' && {model: model.id}),
+      ...(OPENAI_API_TYPE === 'openai' && { model: model.id }),
       messages: [
         {
           role: 'system',

@@ -98,7 +98,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           messages: updatedConversation.messages,
           key: apiKey,
           prompt: updatedConversation.prompt,
-          temperature: updatedConversation.temperature
+          temperature: updatedConversation.temperature,
         };
         const endpoint = getEndpoint(plugin);
         let body;
@@ -405,7 +405,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'shopGPT'
                     )}
                   </div>
 
@@ -425,14 +425,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                       />
 
                       <TemperatureSlider
-                          label="Temperature"
-                          onChangeTemperature={(temperature) =>
-                            handleUpdateConversation(selectedConversation, {
-                              key: 'temperature',
-                              value: temperature,
-                            })
-                          }
-                        />
+                        label="Temperature"
+                        onChangeTemperature={(temperature) =>
+                          handleUpdateConversation(selectedConversation, {
+                            key: 'temperature',
+                            value: temperature,
+                          })
+                        }
+                      />
                     </div>
                   )}
                 </div>
